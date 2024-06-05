@@ -27,10 +27,13 @@
     <script type="text/babel">
 
 
-function Link({string, go_to}){
+function Link({page_name, go_to}){
     return(
-        <span onClick={(() => go_to(string))} class="link">
-            {`[${string}] `} 
+        <span>
+            <span onClick={(() => go_to(page_name))} className="link">
+                {`[${page_name}]`} 
+                </span>
+                {" "}
         </span>
     )
 }
@@ -38,22 +41,33 @@ function Link({string, go_to}){
 
         function App(){
             const [page, setpage] = React.useState(pages["start"]);
+            const [placeHolder, rerender] = React.useState(true)
+            
+            
             const words = page.split(" ");
 
-            function go_to(string){
-                if (!(string in pages)){
-                    pages[string] = "this is a new page"
+            function go_to(page_name){
+                if (!(page_name in pages)){
+                    pages[page_name] = "this is a new page"
                 }
-                setpage(pages[string])
+                setpage(pages[page_name])
             }
 
-            const ready_page = words.map(word => word[0] === "[" && word[word.length - 1] === "]" ? <Link string={word.slice(1, -1)} go_to={go_to} /> : `${word} `)
+            function add_text_to_page(string, page_name){
+                pages[page_name] += string
+                rerender(!placeHolder)
+            }
 
+            const ready_page = words.map(word => word[0] === "[" && word[word.length - 1] === "]" ? <Link page_name={word.slice(1, -1)} go_to={go_to} /> : `${word} `)
+            const ref = React.createRef()
 
             return(
                 <main>
 
                     {ready_page}
+
+                    <input type="text" ref={ref} onChange={(e) => add_text_to_page(e.target.value, page)} />
+                    <button onClick={() => add_text_to_page(ref.current.value, page)}>submit</button>
                                         
                     
                 </main>
