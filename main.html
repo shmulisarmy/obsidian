@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>obsidian</title>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js"></script>
+      <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+      <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+      <style>
+        .link{
+            color: blue;
+            cursor: pointer;
+            font-weight: bold;
+            text-decoration: underline;
+
+        }
+      </style>
+</head>
+<body>
+
+
+    <div id="root"></div>
+    
+
+
+    <script type="text/babel">
+
+
+function Link({string, go_to}){
+    return(
+        <span onClick={(() => go_to(string))} class="link">
+            {`[${string}] `} 
+        </span>
+    )
+}
+
+
+        function App(){
+            const [page, setpage] = React.useState(pages["start"]);
+            const words = page.split(" ");
+
+            function go_to(string){
+                if (!(string in pages)){
+                    pages[string] = "this is a new page"
+                }
+                setpage(pages[string])
+            }
+
+            const ready_page = words.map(word => word[0] === "[" && word[word.length - 1] === "]" ? <Link string={word.slice(1, -1)} go_to={go_to} /> : `${word} `)
+
+
+            return(
+                <main>
+
+                    {ready_page}
+                                        
+                    
+                </main>
+
+
+            )
+        }
+
+
+        const pages = {
+            start: "this is the first first page that i am on, hahhahahha another page that i can look at is the [todo] page",
+            todo: "this is the page for todos anotehr page is the [about] page",
+            about: "this links [back] to [start]"
+        }
+
+
+
+     ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>
