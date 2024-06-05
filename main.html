@@ -8,6 +8,17 @@
       <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
       <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
       <style>
+        @keyframes flash {
+
+        50%{
+            opacity: 0.1;
+        }
+     
+        }
+        
+        main {
+                    margin: 8%;
+                }
         .link{
             color: blue;
             cursor: pointer;
@@ -15,12 +26,37 @@
             text-decoration: underline;
 
         }
+
+        input{
+            width: 100%;
+            height: 50px;
+        }
+        .flash{
+            transform: scale(2);
+            animation: flash 1s infinite;
+        }
+        .map{
+                        margin: 8%;
+                        display: grid;
+                        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                        grid-gap: 20px;
+        }
+        .display-page{
+            border: 1px solid black;
+            padding: 20px;
+            margin: 10px;
+            border-radius: 10px;
+            box-shadow: 1px 1px 1px;
+            word-break: break-all;
+            hyphens: auto;
+        }
       </style>
 </head>
 <body>
 
 
     <div id="root"></div>
+    <div id="map"></div>
     
 
 
@@ -39,40 +75,80 @@ function Link({page_name, go_to}){
 }
 
 
-        function App(){
-            const [page, setpage] = React.useState(pages["start"]);
+        function App({passed_in_page}){
+            const [page, setpage] = React.useState(pages[passed_in_page]);
+            const [pageName, setPageName] = React.useState(passed_in_page);
             const [placeHolder, rerender] = React.useState(true)
             
             
             const words = page.split(" ");
+            const input_ref = React.useRef(null)
 
             function go_to(page_name){
                 if (!(page_name in pages)){
                     pages[page_name] = "this is a new page"
                 }
                 setpage(pages[page_name])
+                setPageName(pageName)
             }
 
-            function add_text_to_page(string, page_name){
-                pages[page_name] += string
-                rerender(!placeHolder)
-            }
+            function add_text_to_page(page_name){
+                pages[pageName] = page + input_ref.current.value
+                console.log(pages[pageName])
+                input_ref.current.value = ""
+                const string_clone = new String(pages[pageName]).toString()
+                setpage(string_clone)
+                ReactDOM.render(<MAP />, document.getElementById('map'));
 
-            const ready_page = words.map(word => word[0] === "[" && word[word.length - 1] === "]" ? <Link page_name={word.slice(1, -1)} go_to={go_to} /> : `${word} `)
-            const ref = React.createRef()
+                
+            }
+            function handle_input(){
+                add_text_to_page(pageName)
+            }
+            
+
+            const ready_page = words.map(word => word[0] === "[" && word[word.length - 1] === "]" ? <Link page_name={word.slice(1, -1)} go_to={go_to} key={word.slice(1, -1)}/> : `${word} `)
 
             return(
                 <main>
+                    <h1>{pageName}</h1>
 
                     {ready_page}
+                    <span className="flash">|</span>
+                    <br/>
+                    <br/>
 
-                    <input type="text" ref={ref} onChange={(e) => add_text_to_page(e.target.value, page)} />
-                    <button onClick={() => add_text_to_page(ref.current.value, page)}>submit</button>
+                    <input type="text"  ref={input_ref} onChange={() => handle_input()} />
                                         
                     
                 </main>
 
 
+            )
+        }
+
+        function Display_page({page_name}){
+            const page_content = pages[page_name]
+            console.log({page_content})
+            const words = page_content.split(" ");
+            console.log({words})
+            const ready_page = words.map(word => word[0] === "[" && word[word.length - 1] === "]" ? <Link page_name={word.slice(1, -1)} key={word.slice(1, -1)}/> : `${word} `)
+
+            return(
+                <div className="display-page">
+                    <h1>{page_name}</h1>
+
+                    {ready_page}
+                </div >
+            )
+        }
+
+        function MAP(){
+            return(
+                <div className="map">
+                        {Object.keys(pages).map(pageName => <Display_page page_name={pageName}/>)}
+                        
+                </div>
             )
         }
 
@@ -85,7 +161,8 @@ function Link({page_name, go_to}){
 
 
 
-     ReactDOM.render(<App />, document.getElementById('root'));
+     ReactDOM.render(<App passed_in_page={'start'} />, document.getElementById('root'));
+     ReactDOM.render(<MAP />, document.getElementById('map'));
     </script>
 </body>
 </html>
