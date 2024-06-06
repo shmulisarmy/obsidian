@@ -110,8 +110,8 @@
 
         function Link({ page_name, go_to }) {
             return (
-                <span>
-                    <span onClick={(() => go_to(page_name))} className="link">
+                <span  onMouseEnter={() => call(page_name)}>
+                    <span onClick={(() => go_to(page_name))} className="link" >
                         {`[${page_name}]`}
                     </span>
                     {" "}
