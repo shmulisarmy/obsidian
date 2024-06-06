@@ -12,6 +12,11 @@
         .highlight {
             background-color: yellow;
             font-weight: bold;
+            
+        }
+        .exact-highlight {
+            color: green;
+            font-weight: bold;
         }
 
         @keyframes flash {
@@ -53,14 +58,16 @@
 
         .display-page {
             border: 1px solid black;
-            padding: 20px;
+            padding: 10px;
             margin: 10px;
             border-radius: 10px;
             box-shadow: 1px 1px 1px;
             word-break: break-all;
             hyphens: auto;
             position: relative;
-        }
+
+            }
+
 
         button.go_to {
             background: linear-gradient(90deg, lightgreen, green);
@@ -83,6 +90,10 @@
         button:active {
             background: linear-gradient(90deg, rgb(38, 105, 132), lightgreen);
             transform: scale(0.9);
+        }
+        .display-page:hover{
+            cursor: pointer;
+            background: linear-gradient(90deg, rgba(34, 104, 116, 0.284), rgb(101, 143, 24));
         }
     </style>
 </head>
@@ -124,6 +135,7 @@
                     pages[page_name] = ""
 
                 }
+                showing_page = page_name
                 setpage(pages[page_name])
                 setPageName(page_name)
                 ReactDOM.render(<Tree page_on={page_name} />, document.getElementById('tree'));
@@ -195,10 +207,9 @@
             })
 
             return (
-                <div class="outer" className={page_name}>
-                    <div className="display-page">
-                        <h1>{page_name}</h1>
-                        <button className="go_to" onClick={() => main_goto(page_name)}>go to</button>
+                <div class="outer" className={page_name} >
+                    <div className="display-page" onClick={() => main_goto(page_name)}>
+                        <h1 className={`title ${page_name === showing_page ? "exact-highlight" : ""}`}>{page_name}</h1>
                         <button className="x" onClick={() => Delete(page_name)}>X</button>
                     </div >
 
@@ -235,7 +246,7 @@
 
         const pages = {
             start: "this links [down]",
-            down: "this linksto [baby] [second] ",
+            down: "this linksto [second] [baby] [second] ",
 
             // right: "this linksto [down]",
             // left: "this linksto [down]",
@@ -264,6 +275,7 @@
         }
 
         let Interval
+        var showing_page = "start"
 
 
 
