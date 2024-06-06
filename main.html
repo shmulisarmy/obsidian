@@ -49,6 +49,21 @@
             box-shadow: 1px 1px 1px;
             word-break: break-all;
             hyphens: auto;
+            position: relative;
+        }
+
+        button.go_to{
+            background: linear-gradient(90deg, lightgreen, green);
+        }
+
+        .x{
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            background-color: red;
+            border-radius: 10px;
         }
       </style>
 </head>
@@ -89,8 +104,10 @@ function Link({page_name, go_to}){
                     pages[page_name] = "this is a new page"
                 }
                 setpage(pages[page_name])
-                setPageName(pageName)
+                setPageName(page_name)
             }
+
+            main_goto = go_to
 
             function add_text_to_page(page_name){
                 pages[pageName] = page + input_ref.current.value
@@ -139,6 +156,8 @@ function Link({page_name, go_to}){
                     <h1>{page_name}</h1>
 
                     {ready_page}
+                    <button className="go_to" onClick={() => main_goto(page_name)}>go to</button>
+                    <button className="x" onClick={() => Delete(page_name)}>X</button>
                 </div >
             )
         }
@@ -157,6 +176,13 @@ function Link({page_name, go_to}){
             start: "this is the first first page that i am on, hahhahahha another page that i can look at is the [todo] page",
             todo: "this is the page for todos anotehr page is the [about] page",
             about: "this links [back] to [start]"
+        }
+
+        var main_goto;
+
+        function Delete(page_name){
+            delete pages[page_name]
+            ReactDOM.render(<MAP />, document.getElementById('map'));
         }
 
 
