@@ -9,6 +9,9 @@
     <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
     <style>
+        :root{
+            --indent-amount: 8%;
+        }
         .highlight {
             background-color: yellow;
             font-weight: bold;
@@ -28,7 +31,7 @@
         }
 
         main {
-            margin: 8%;
+            margin: var(--indent-amount);
         }
 
         .link {
@@ -50,10 +53,11 @@
         }
 
         .map {
-            margin: 8%;
+            margin: var(--indent-amount);
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             grid-gap: 20px;
+
         }
 
         .display-page {
@@ -66,6 +70,16 @@
             hyphens: auto;
             position: relative;
 
+            }
+
+            .display-page:hover{
+                .x{
+                    display: block;
+                }
+            }
+
+            #tree {
+                margin: var(--indent-amount);
             }
 
 
@@ -81,6 +95,7 @@
             font-weight: bold;
             background-color: red;
             border-radius: 10px;
+            display: none;
         }
 
         .children-files {
@@ -95,10 +110,27 @@
             cursor: pointer;
             background: linear-gradient(90deg, rgba(34, 104, 116, 0.284), rgb(101, 143, 24));
         }
+        body{
+            margin: 0;
+        }
+        nav{
+                    background-color: black;
+                    color: white;
+                    display: flex;
+                    justify-content: space-evenly;
+                    position: sticky;
+                    top: 0%;
+                    z-index: 1;
+                }
     </style>
 </head>
 
 <body>
+
+    <nav>
+        <p>obsidian</p>
+        <p>obsidian</p>
+    </nav>
 
 
     <div id="root"></div>
@@ -237,7 +269,7 @@
             })
             pages_looked_at.length = 0;
             return (
-                <div id="tree">
+                <div >
                     <Display_page_for_tree page_name={'start'} />
                 </div>
             )
