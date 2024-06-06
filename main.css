@@ -1,0 +1,113 @@
+        :root{
+            --indent-amount: 8%;
+        }
+        .highlight {
+            background-color: yellow;
+            font-weight: bold;
+            
+        }
+        .exact-highlight {
+            color: green;
+            font-weight: bold;
+        }
+
+        @keyframes flash {
+
+            50% {
+                opacity: 0.1;
+            }
+
+        }
+
+        main {
+            margin: var(--indent-amount);
+        }
+
+        .link {
+            color: blue;
+            cursor: pointer;
+            font-weight: bold;
+            text-decoration: underline;
+
+        }
+
+        input {
+            width: 100%;
+            height: 50px;
+        }
+
+        .flash {
+            transform: scale(2);
+            animation: flash 1s infinite;
+        }
+
+        .map {
+            margin: var(--indent-amount);
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-gap: 20px;
+
+        }
+
+        .display-page {
+            border: 1px solid black;
+            padding: 10px;
+            margin: 10px;
+            border-radius: 10px;
+            box-shadow: 1px 1px 1px;
+            word-break: break-all;
+            hyphens: auto;
+            position: relative;
+
+            }
+
+            .display-page:hover{
+                .x{
+                    display: block;
+                }
+            }
+
+            #tree {
+                margin: var(--indent-amount);
+            }
+
+
+        button.go_to {
+            background: linear-gradient(90deg, lightgreen, green);
+        }
+
+        .x {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            background-color: red;
+            border-radius: 10px;
+            display: none;
+        }
+
+        .children-files {
+            display: flex;
+        }
+
+        button:active {
+            background: linear-gradient(90deg, rgb(38, 105, 132), lightgreen);
+            transform: scale(0.9);
+        }
+        .display-page:hover{
+            cursor: pointer;
+            background: linear-gradient(90deg, rgba(34, 104, 116, 0.284), rgb(101, 143, 24));
+        }
+        body{
+            margin: 0;
+        }
+        nav{
+                    background-color: black;
+                    color: white;
+                    display: flex;
+                    justify-content: space-evenly;
+                    position: sticky;
+                    top: 0%;
+                    z-index: 1;
+                }
