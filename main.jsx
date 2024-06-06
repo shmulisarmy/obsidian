@@ -13,11 +13,9 @@ function Link({ page_name, go_to }) {
 function App({ passed_in_page }) {
     const [page, setpage] = React.useState(pages[passed_in_page]);
     const [pageName, setPageName] = React.useState(passed_in_page);
-    const [placeHolder, rerender] = React.useState(true)
 
 
     const words = page.split(" ");
-    const ref = React.useRef(null)
 
     function go_to(page_name) {
         if (!(page_name in pages)) {
@@ -61,7 +59,7 @@ function App({ passed_in_page }) {
 
             <h2 id='content'
                 contentEditable="true"
-                ref={ref} >
+                >
                 {ready_page}
             </h2>
 
