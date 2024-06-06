@@ -175,7 +175,11 @@
 
 
                         <div class="children-files">
-                            {links_to.map(page_name => <Display_page_for_tree {...{page_name}}/>)}
+                            {!pages_looked_at.includes(page_name) ? 
+  pages_looked_at.push(page_name) && links_to .map(name => <Display_page_for_tree key={name} page_name={name} />) 
+  : <div> 
+    this page has already been looked at    
+</div>}
                             
 
                         </div>
@@ -204,6 +208,7 @@
             }
 
             var main_goto;
+            const pages_looked_at = []
 
             function Delete(page_name) {
                 delete pages[page_name]
