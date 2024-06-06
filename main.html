@@ -9,6 +9,11 @@
     <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
     <style>
+
+        .highlight{
+            background-color: yellow;
+            font-weight: bold;
+        }
         @keyframes flash {
 
             50% {
@@ -73,6 +78,11 @@
         .children-files {
             display: flex;
         }
+
+        button:active {
+            background: linear-gradient(90deg, rgb(38, 105, 132), lightgreen);
+            transform: scale(0.9);
+        }
     </style>
 </head>
 
@@ -110,10 +120,12 @@
 
             function go_to(page_name) {
                 if (!(page_name in pages)) {
-                    pages[page_name] = "this is a new page"
-                }
-                setpage(pages[page_name])
-                setPageName(page_name)
+                    pages[page_name] = ""
+                    
+                    }
+                    setpage(pages[page_name])
+                    setPageName(page_name)
+                    ReactDOM.render(<Tree page_on={page_name}/>, document.getElementById('tree'));
             }
 
             main_goto = go_to
@@ -124,7 +136,7 @@
                 input_ref.current.value = ""
                 const string_clone = new String(pages[pageName]).toString()
                 setpage(string_clone)
-                ReactDOM.render(<MAP />, document.getElementById('map'));
+                ReactDOM.render(<Tree page_on={page_name}/>, document.getElementById('tree'));
 
 
             }
@@ -154,6 +166,11 @@
 
 
             function Display_page_for_tree({ page_name }) {
+                if (!(page_name in pages)) {
+                    pages[page_name] = ""
+                    ReactDOM.render(<Tree page_on={page_name}/>, document.getElementById('tree'));
+
+                }
             const page_content = pages[page_name]
             const words = page_content.split(" ");
             const links_to = []
@@ -162,11 +179,17 @@
                 if (word[0] === "[" && word[word.length - 1] === "]") {
                     const trimmed_word = word.slice(1, -1)
                     links_to.push(trimmed_word)
+                    const page_name = trimmed_word
+                    if (!(page_name in pages)) {
+                    pages[page_name] = ""
+                    ReactDOM.render(<Tree page_on={page_name}/>, document.getElementById('tree'));
+
+                }
                 }
             })
 
                 return (
-                    <div class="outer">
+                    <div class="outer" className={page_name}>
                         <div className="display-page">
                             <h1>{page_name}</h1>
                             <button className="go_to" onClick={() => main_goto(page_name)}>go to</button>
@@ -176,7 +199,7 @@
 
                         <div class="children-files">
                             {!pages_looked_at.includes(page_name) ? 
-  pages_looked_at.push(page_name) && links_to .map(name => <Display_page_for_tree key={name} page_name={name} />) 
+  pages_looked_at.push(page_name) && links_to .map(name => <Display_page_for_tree page_name={name} />) 
   : <div> 
     this page has already been looked at    
 </div>}
@@ -189,7 +212,13 @@
         
 
 
-                function Tree() {
+                function Tree({page_on}) {
+                    console.log({page_on})
+
+                    React.useEffect(() => {
+                        highlight_current_page(page_on)
+                    })
+                    pages_looked_at.length = 0;
                     return (
                         <div id="tree">
                             <Display_page_for_tree page_name={'start'} />
@@ -212,7 +241,18 @@
 
             function Delete(page_name) {
                 delete pages[page_name]
-                ReactDOM.render(<MAP />, document.getElementById('map'));
+                ReactDOM.render(<Tree />, document.getElementById('tree'));
+                
+            }
+
+            function highlight_current_page(page_name) {
+                remove_highlight()
+                document.querySelectorAll(`.${page_name}`).forEach(el => el.classList.add("highlight"));
+
+            }
+            function remove_highlight() {
+                document.querySelectorAll(`.highlight`).forEach(el => el.classList.remove("highlight"));
+
             }
 
 
