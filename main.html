@@ -1,25 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>obsidian</title>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js"></script>
-      <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
-      <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
-      <style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js"></script>
+    <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <style>
         @keyframes flash {
 
-        50%{
-            opacity: 0.1;
+            50% {
+                opacity: 0.1;
+            }
+
         }
-     
-        }
-        
+
         main {
-                    margin: 8%;
-                }
-        .link{
+            margin: 8%;
+        }
+
+        .link {
             color: blue;
             cursor: pointer;
             font-weight: bold;
@@ -27,21 +29,24 @@
 
         }
 
-        input{
+        input {
             width: 100%;
             height: 50px;
         }
-        .flash{
+
+        .flash {
             transform: scale(2);
             animation: flash 1s infinite;
         }
-        .map{
-                        margin: 8%;
-                        display: grid;
-                        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-                        grid-gap: 20px;
+
+        .map {
+            margin: 8%;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-gap: 20px;
         }
-        .display-page{
+
+        .display-page {
             border: 1px solid black;
             padding: 20px;
             margin: 10px;
@@ -52,11 +57,11 @@
             position: relative;
         }
 
-        button.go_to{
+        button.go_to {
             background: linear-gradient(90deg, lightgreen, green);
         }
 
-        .x{
+        .x {
             position: absolute;
             top: 4px;
             right: 4px;
@@ -65,42 +70,46 @@
             background-color: red;
             border-radius: 10px;
         }
-      </style>
+        .children-files {
+            display: flex;
+        }
+    </style>
 </head>
+
 <body>
 
 
     <div id="root"></div>
-    <div id="map"></div>
-    
+    <div id="tree"></div>
+
 
 
     <script type="text/babel">
 
 
-function Link({page_name, go_to}){
-    return(
-        <span>
-            <span onClick={(() => go_to(page_name))} className="link">
-                {`[${page_name}]`} 
+        function Link({ page_name, go_to }) {
+            return (
+                <span>
+                    <span onClick={(() => go_to(page_name))} className="link">
+                        {`[${page_name}]`}
+                    </span>
+                    {" "}
                 </span>
-                {" "}
-        </span>
-    )
-}
+            )
+        }
 
 
-        function App({passed_in_page}){
+        function App({ passed_in_page }) {
             const [page, setpage] = React.useState(pages[passed_in_page]);
             const [pageName, setPageName] = React.useState(passed_in_page);
             const [placeHolder, rerender] = React.useState(true)
-            
-            
+
+
             const words = page.split(" ");
             const input_ref = React.useRef(null)
 
-            function go_to(page_name){
-                if (!(page_name in pages)){
+            function go_to(page_name) {
+                if (!(page_name in pages)) {
                     pages[page_name] = "this is a new page"
                 }
                 setpage(pages[page_name])
@@ -109,7 +118,7 @@ function Link({page_name, go_to}){
 
             main_goto = go_to
 
-            function add_text_to_page(page_name){
+            function add_text_to_page(page_name) {
                 pages[pageName] = page + input_ref.current.value
                 console.log(pages[pageName])
                 input_ref.current.value = ""
@@ -117,79 +126,139 @@ function Link({page_name, go_to}){
                 setpage(string_clone)
                 ReactDOM.render(<MAP />, document.getElementById('map'));
 
-                
+
             }
-            function handle_input(){
+            function handle_input() {
                 add_text_to_page(pageName)
             }
-            
 
-            const ready_page = words.map(word => word[0] === "[" && word[word.length - 1] === "]" ? <Link page_name={word.slice(1, -1)} go_to={go_to} key={word.slice(1, -1)}/> : `${word} `)
 
-            return(
+            const ready_page = words.map(word => word[0] === "[" && word[word.length - 1] === "]" ? <Link page_name={word.slice(1, -1)} go_to={go_to} key={word.slice(1, -1)} /> : `${word} `)
+
+            return (
                 <main>
                     <h1>{pageName}</h1>
 
                     {ready_page}
                     <span className="flash">|</span>
-                    <br/>
-                    <br/>
+                    <br />
+                    <br />
 
-                    <input type="text"  ref={input_ref} onChange={() => handle_input()} />
-                    
+                    <input type="text" ref={input_ref} onChange={() => handle_input()} />
+
                 </main>
 
 
             )
         }
 
-        function Display_page({page_name}){
+        function Display_page({ page_name }) {
             const page_content = pages[page_name]
-            console.log({page_content})
             const words = page_content.split(" ");
-            console.log({words})
-            const ready_page = words.map(word => word[0] === "[" && word[word.length - 1] === "]" ? <Link page_name={word.slice(1, -1)} key={word.slice(1, -1)}/> : `${word} `)
+            const links_to = []
 
-            return(
-                <div className="display-page">
-                    <h1>{page_name}</h1>
+            const ready_page = words.map(word => {
+                if (word[0] === "[" && word[word.length - 1] === "]") {
+                    const trimmed_word = word.slice(1, -1)
+                    links_to.push(trimmed_word)
+                    return <Link page_name={trimmed_word} key={trimmed_word} />
+                } else {
+                    return `${word}`
+                }
+            })
 
-                    {ready_page}
-                    <button className="go_to" onClick={() => main_goto(page_name)}>go to</button>
-                    <button className="x" onClick={() => Delete(page_name)}>X</button>
-                </div >
-            )
-        }
+                return (
+                    <div class="outer">
+                        <div className="display-page">
+                            <h1>{page_name}</h1>
 
-        function MAP(){
-            return(
-                <div className="map">
-                        {Object.keys(pages).map(pageName => <Display_page page_name={pageName}/>)}
-                        
-                </div>
-            )
-        }
+                            {ready_page}
+                            <button className="go_to" onClick={() => main_goto(page_name)}>go to</button>
+                            <button className="x" onClick={() => Delete(page_name)}>X</button>
+                        </div >
+
+
+                        <div class="children-files">
+                            {links_to.map(page_name => <Display_page {...{page_name}}/>)}
+                            
+
+                        </div>
+                    </div>
+                )
+            }
+
+
+            function Display_page_for_tree({ page_name }) {
+            const page_content = pages[page_name]
+            const words = page_content.split(" ");
+            const links_to = []
+
+                words.forEach(word => {
+                if (word[0] === "[" && word[word.length - 1] === "]") {
+                    const trimmed_word = word.slice(1, -1)
+                    links_to.push(trimmed_word)
+                }
+            })
+
+                return (
+                    <div class="outer">
+                        <div className="display-page">
+                            <h1>{page_name}</h1>
+                            <button className="go_to" onClick={() => main_goto(page_name)}>go to</button>
+                            <button className="x" onClick={() => Delete(page_name)}>X</button>
+                        </div >
+
+
+                        <div class="children-files">
+                            {links_to.map(page_name => <Display_page_for_tree {...{page_name}}/>)}
+                            
+
+                        </div>
+                    </div>
+                )
+            }
+        
+
+        function MAP() {
+                    return (
+                        <div className="map">
+                            {Object.keys(pages).map(pageName => <Display_page page_name={pageName} />)}
+
+                        </div>
+                    )
+                }
+
+                function Tree() {
+                    return (
+                        <div id="tree">
+                            <Display_page_for_tree page_name={'start'} />
+                        </div>
+                    )
+                }
 
 
         const pages = {
-            start: "this links [right] to [left]",
-            right: "this linksto [down]",
-            left: "this linksto [down]",
-            down: "this links [baby]",
-            baby: "this is a new page"
-        }
+                start: "this links [right] to [left]",
+                right: "this linksto [down]",
+                left: "this linksto [down]",
+                down: "this links [baby] [second] ",
+                second: "this is a new page",
+                baby: "this is a new page"
+            }
 
-        var main_goto;
+            var main_goto;
 
-        function Delete(page_name){
-            delete pages[page_name]
-            ReactDOM.render(<MAP />, document.getElementById('map'));
-        }
+            function Delete(page_name) {
+                delete pages[page_name]
+                ReactDOM.render(<MAP />, document.getElementById('map'));
+            }
 
 
 
-     ReactDOM.render(<App passed_in_page={'start'} />, document.getElementById('root'));
-     ReactDOM.render(<MAP />, document.getElementById('map'));
+            ReactDOM.render(<App passed_in_page={'start'} />, document.getElementById('root'));
+            // ReactDOM.render(<MAP />, document.getElementById('map'));
+            ReactDOM.render(<Tree />, document.getElementById('tree'));
     </script>
 </body>
+
 </html>
