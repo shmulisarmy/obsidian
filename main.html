@@ -152,41 +152,6 @@
             )
         }
 
-        function Display_page({ page_name }) {
-            const page_content = pages[page_name]
-            const words = page_content.split(" ");
-            const links_to = []
-
-            const ready_page = words.map(word => {
-                if (word[0] === "[" && word[word.length - 1] === "]") {
-                    const trimmed_word = word.slice(1, -1)
-                    links_to.push(trimmed_word)
-                    return <Link page_name={trimmed_word} key={trimmed_word} />
-                } else {
-                    return `${word}`
-                }
-            })
-
-                return (
-                    <div class="outer">
-                        <div className="display-page">
-                            <h1>{page_name}</h1>
-
-                            {ready_page}
-                            <button className="go_to" onClick={() => main_goto(page_name)}>go to</button>
-                            <button className="x" onClick={() => Delete(page_name)}>X</button>
-                        </div >
-
-
-                        <div class="children-files">
-                            {links_to.map(page_name => <Display_page {...{page_name}}/>)}
-                            
-
-                        </div>
-                    </div>
-                )
-            }
-
 
             function Display_page_for_tree({ page_name }) {
             const page_content = pages[page_name]
@@ -219,14 +184,6 @@
             }
         
 
-        function MAP() {
-                    return (
-                        <div className="map">
-                            {Object.keys(pages).map(pageName => <Display_page page_name={pageName} />)}
-
-                        </div>
-                    )
-                }
 
                 function Tree() {
                     return (
@@ -238,7 +195,7 @@
 
 
         const pages = {
-                start: "this links [right] to [left]",
+                start: "this links [right] [right] to [left]",
                 right: "this linksto [down]",
                 left: "this linksto [down]",
                 down: "this links [baby] [second] ",
