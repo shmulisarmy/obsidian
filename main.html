@@ -83,6 +83,16 @@
             background: linear-gradient(90deg, rgb(38, 105, 132), lightgreen);
             transform: scale(0.9);
         }
+        .display{
+            padding: 20px;
+            margin: 10px;
+            border-radius: 10px;
+            box-shadow: 1px 1px 1px;
+            word-break: break-all;
+            hyphens: auto;
+            position: relative;
+            background-color: greenyellow;
+        }
     </style>
 </head>
 
@@ -90,6 +100,7 @@
 
 
     <div id="root"></div>
+    <div id="show-page"></div>
     <div id="tree"></div>
 
 
@@ -190,7 +201,7 @@
 
                 return (
                     <div class="outer" className={page_name}>
-                        <div className="display-page">
+                        <div className="display-page" onMouseEnter={() => call(page_name)}>
                             <h1>{page_name}</h1>
                             <button className="go_to" onClick={() => main_goto(page_name)}>go to</button>
                             <button className="x" onClick={() => Delete(page_name)}>X</button>
@@ -255,6 +266,20 @@
 
             }
 
+            function Show_page({page_name}) {
+                // this gets called when hovered on
+                return (
+                    <div className="display">
+                        {pages[page_name]}
+                        
+                    </div>
+                )
+            }
+
+
+            function call(page_name){
+                ReactDOM.render(<Show_page page_name={page_name}/>, document.getElementById('show-page'))
+            }
 
 
             ReactDOM.render(<App passed_in_page={'start'} />, document.getElementById('root'));
