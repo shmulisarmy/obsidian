@@ -136,7 +136,6 @@ function Link({page_name, go_to}){
                     <br/>
 
                     <input type="text"  ref={input_ref} onChange={() => handle_input()} />
-                                        
                     
                 </main>
 
@@ -173,9 +172,11 @@ function Link({page_name, go_to}){
 
 
         const pages = {
-            start: "this is the first first page that i am on, hahhahahha another page that i can look at is the [todo] page",
-            todo: "this is the page for todos anotehr page is the [about] page",
-            about: "this links [back] to [start]"
+            start: "this links [right] to [left]",
+            right: "this linksto [down]",
+            left: "this linksto [down]",
+            down: "this links [baby]",
+            baby: "this is a new page"
         }
 
         var main_goto;
